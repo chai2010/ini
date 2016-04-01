@@ -4,9 +4,20 @@
 
 package ini
 
-import (
-	"fmt"
-)
+// HasOption checks if the configuration has the given option in the section.
+// It returns false if either the option or section do not exist.
+func (c *Config) HasOption(section string, option string) bool {
+	if section == "" {
+		section = DEFAULT_SECTION
+	}
+
+	if _, ok := c.dataMap[section]; !ok {
+		return false
+	}
+
+	_, ok := c.dataMap[section][option]
+	return ok
+}
 
 // AddOption adds a new option and value to the configuration.
 //
@@ -43,54 +54,6 @@ func (c *Config) RemoveOption(section string, option string) bool {
 	_, ok := c.dataMap[section][option]
 	delete(c.dataMap[section], option)
 	return ok
-}
-
-// HasOption checks if the configuration has the given option in the section.
-// It returns false if either the option or section do not exist.
-func (c *Config) HasOption(section string, option string) bool {
-	if section == "" {
-		section = DEFAULT_SECTION
-	}
-
-	if _, ok := c.dataMap[section]; !ok {
-		return false
-	}
-
-	_, ok := c.dataMap[section][option]
-	return ok
-}
-
-// Options returns the list of options available in the given section.
-// It returns an error if the section does not exist and an empty list if the
-// section is empty. Options within the default section are also included.
-func (c *Config) Options(section string) (options []string, err error) {
-	if section == "" {
-		section = DEFAULT_SECTION
-	}
-
-	if _, ok := c.dataMap[section]; !ok {
-		return nil, fmt.Errorf("ini: section '%s' not found", section)
-	}
-
-	// Keep a map of option names we've seen to deduplicate.
-	optionMap := make(map[string]struct{},
-		len(c.dataMap[DEFAULT_SECTION])+len(c.dataMap[section]))
-	for s, _ := range c.dataMap[DEFAULT_SECTION] {
-		optionMap[s] = struct{}{}
-	}
-	for s, _ := range c.dataMap[section] {
-		optionMap[s] = struct{}{}
-	}
-
-	// Get the keys.
-	i := 0
-	options = make([]string, len(optionMap))
-	for k, _ := range optionMap {
-		options[i] = k
-		i++
-	}
-
-	return options, nil
 }
 
 // GetOptionList returns only the list of options available in the given section.

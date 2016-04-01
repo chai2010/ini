@@ -4,6 +4,16 @@
 
 package ini
 
+// HasSection checks if the configuration has the given section.
+// (The default section always exists.)
+func (c *Config) HasSection(section string) bool {
+	if section == "" || section == DEFAULT_SECTION {
+		return true
+	}
+	_, ok := c.dataMap[section]
+	return ok
+}
+
 // AddSection adds a new section to the configuration.
 //
 // If the section is nil then uses the section by default which it's already
@@ -43,16 +53,6 @@ func (c *Config) RemoveSection(section string) bool {
 	delete(c.lastIdOptionMap, section)
 	delete(c.idSectionMap, section)
 	return true
-}
-
-// HasSection checks if the configuration has the given section.
-// (The default section always exists.)
-func (c *Config) HasSection(section string) bool {
-	if section == "" || section == DEFAULT_SECTION {
-		return true
-	}
-	_, ok := c.dataMap[section]
-	return ok
 }
 
 // GetSectionList returns the list of sections in the configuration.

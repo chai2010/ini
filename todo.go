@@ -4,8 +4,8 @@
 
 package ini
 
-func (c *Config) MustBool(section, key string, defaultVal ...bool) bool {
-	v, err := c.Bool(section, key)
+func (c *Config) MustValue(section, key string, defaultVal ...string) string {
+	v, err := c.String(section, key)
 	if err != nil {
 		if len(defaultVal) > 0 {
 			return defaultVal[0]
@@ -16,8 +16,8 @@ func (c *Config) MustBool(section, key string, defaultVal ...bool) bool {
 	return v
 }
 
-func (c *Config) MustFloat64(section, key string, defaultVal ...float64) float64 {
-	v, err := c.Float64(section, key)
+func (c *Config) MustBool(section, key string, defaultVal ...bool) bool {
+	v, err := c.Bool(section, key)
 	if err != nil {
 		if len(defaultVal) > 0 {
 			return defaultVal[0]
@@ -40,8 +40,8 @@ func (c *Config) MustInt(section, key string, defaultVal ...int) int {
 	return v
 }
 
-func (c *Config) MustValue(section, key string, defaultVal ...string) string {
-	v, err := c.String(section, key)
+func (c *Config) MustFloat64(section, key string, defaultVal ...float64) float64 {
+	v, err := c.Float64(section, key)
 	if err != nil {
 		if len(defaultVal) > 0 {
 			return defaultVal[0]

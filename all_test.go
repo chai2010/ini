@@ -63,8 +63,7 @@ func TestInMemory(t *testing.T) {
 	}
 
 	// get options for missing section
-	_, err := c.Options("no-section")
-	if err == nil {
+	if c.HasSection("no-section") {
 		t.Errorf("Options failure: invalid section")
 	}
 
@@ -74,7 +73,7 @@ func TestInMemory(t *testing.T) {
 	}
 
 	// get value from missing section/option
-	_, err = c.String("no-section", "no-option")
+	_, err := c.String("no-section", "no-option")
 	if err == nil {
 		t.Errorf("String failure: got value for missing section/option")
 	}
@@ -231,8 +230,8 @@ func TestReadFile(t *testing.T) {
 	}
 
 	// check number of options 6 of [section-1] plus 2 of [default]
-	opts, err := c.Options("section-1")
-	if len(opts) != 8 {
+	opts := c.GetOptionList("section-1")
+	if len(opts) != 6 {
 		t.Errorf("Options failure: wrong number of options: %d", len(opts))
 	}
 
