@@ -110,20 +110,20 @@ func NewDefault() *Config {
 	return New(DEFAULT_COMMENT, DEFAULT_SEPARATOR, true, true)
 }
 
-// Merge merges the given configuration "source" with this one ("target").
+// Merge merges the given configuration "source" with this one ("p").
 //
 // Merging means that any option (under any section) from source that is not in
-// target will be copied into target. When the target already has an option with
+// p will be copied into p. When the p already has an option with
 // the same name and section then it is overwritten (i.o.w. the source wins).
 //
-func (target *Config) Merge(source *Config) {
+func (p *Config) Merge(source *Config) {
 	if source == nil || len(source.dataMap) == 0 {
 		return
 	}
 
 	for section, option := range source.dataMap {
 		for optionName, optionValue := range option {
-			target.AddOption(section, optionName, optionValue.v)
+			p.AddOption(section, optionName, optionValue.v)
 		}
 	}
 }
