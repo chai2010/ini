@@ -7,29 +7,29 @@ package ini
 import (
 	"bufio"
 	"fmt"
+	"io"
 	"os"
 	"strings"
 	"unicode"
 )
 
-// Read reads a configuration file and returns its representation.
-// All arguments, except `fname`, are related to `New()`
-func Read(fname string, comment, separator string, preSpace, postSpace bool) (*Config, error) {
-	return _read(fname, New(comment, separator, preSpace, postSpace))
+type Options struct {
+	Comment   string
+	Separator string
+	PreSpace  bool
+	PostSpace bool
 }
 
-// ReadDefault reads a configuration file and returns its representation.
-// It uses values by default.
-func ReadDefault(fname string) (*Config, error) {
-	return _read(fname, NewDefault())
-}
-
-// _read is the base to read a file and get the configuration representation.
-// That representation can be queried with GetString, etc.
-func _read(fname string, c *Config) (*Config, error) {
+func Load(fname string, opt *Options) (c *Config, err error) {
 	file, err := os.Open(fname)
 	if err != nil {
 		return nil, err
+	}
+
+	if opt != nil {
+		c = New(opt.Comment, opt.Separator, opt.PreSpace, opt.PostSpace)
+	} else {
+		c = NewDefault()
 	}
 
 	if err = c.read(bufio.NewReader(file)); err != nil {
@@ -37,6 +37,20 @@ func _read(fname string, c *Config) (*Config, error) {
 	}
 
 	if err = file.Close(); err != nil {
+		return nil, err
+	}
+
+	return c, nil
+}
+
+func LoadFrom(r io.Reader, opt *Options) (c *Config, err error) {
+	if opt != nil {
+		c = New(opt.Comment, opt.Separator, opt.PreSpace, opt.PostSpace)
+	} else {
+		c = NewDefault()
+	}
+
+	if err = c.read(bufio.NewReader(r)); err != nil {
 		return nil, err
 	}
 

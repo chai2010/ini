@@ -7,9 +7,36 @@ package ini
 import (
 	"bufio"
 	"fmt"
+	"io"
 	"os"
 	"strings"
 )
+
+func (c *Config) Save(fname string, header string) error {
+	file, err := os.Create(fname)
+	if err != nil {
+		return err
+	}
+
+	buf := bufio.NewWriter(file)
+	if err = c.write(buf, header); err != nil {
+		return err
+	}
+	buf.Flush()
+
+	return file.Close()
+}
+
+func (c *Config) WriteTo(w io.Writer, header string) error {
+	buf := bufio.NewWriter(w)
+	if err := c.write(buf, header); err != nil {
+		return err
+	}
+	if err := buf.Flush(); err != nil {
+		return err
+	}
+	return nil
+}
 
 // WriteFile saves the configuration representation to a file.
 // The desired file permissions must be passed as in os.Open. The header is a

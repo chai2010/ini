@@ -69,8 +69,8 @@ func (c *Config) Bool(section string, option string) (value bool, err error) {
 	return value, nil
 }
 
-// Float has the same behaviour as String but converts the response to float.
-func (c *Config) Float(section string, option string) (value float64, err error) {
+// Float64 has the same behaviour as String but converts the response to float.
+func (c *Config) Float64(section string, option string) (value float64, err error) {
 	if section == "" {
 		section = DEFAULT_SECTION
 	}

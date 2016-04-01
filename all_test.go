@@ -220,7 +220,7 @@ func TestReadFile(t *testing.T) {
 	buf.Flush()
 	file.Close()
 
-	c, err := ReadDefault(tmpFilename)
+	c, err := Load(tmpFilename, nil)
 	if err != nil {
 		t.Fatalf("ReadDefault failure: %s", err)
 	}
@@ -265,7 +265,7 @@ func TestWriteReadFile(t *testing.T) {
 	cw.WriteFile(tmpFilename, 0644, "Test file for test-case")
 
 	// read back file and test
-	cr, err := ReadDefault(tmpFilename)
+	cr, err := Load(tmpFilename, nil)
 	if err != nil {
 		t.Fatalf("ReadDefault failure: %s", err)
 	}
@@ -297,7 +297,7 @@ func TestSectionOptions(t *testing.T) {
 	cw.WriteFile(tmpFilename, 0644, "Test file for test-case")
 
 	// read back file and test
-	cr, err := ReadDefault(tmpFilename)
+	cr, err := Load(tmpFilename, nil)
 	if err != nil {
 		t.Fatalf("ReadDefault failure: %s", err)
 	}
@@ -344,12 +344,12 @@ func TestSectionOptions(t *testing.T) {
 
 // TestMerge tests merging 2 configurations.
 func TestMerge(t *testing.T) {
-	target, error := ReadDefault(targetFilename)
+	target, error := Load(targetFilename, nil)
 	if error != nil {
 		t.Fatalf("Unable to read target config file '%s'", targetFilename)
 	}
 
-	source, error := ReadDefault(sourceFilename)
+	source, error := Load(sourceFilename, nil)
 	if error != nil {
 		t.Fatalf("Unable to read source config file '%s'", sourceFilename)
 	}
