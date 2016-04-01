@@ -13,25 +13,13 @@ import (
 	"unicode"
 )
 
-type Options struct {
-	Comment   string
-	Separator string
-	PreSpace  bool
-	PostSpace bool
-}
-
 func Load(fname string, opt *Options) (c *Config, err error) {
 	file, err := os.Open(fname)
 	if err != nil {
 		return nil, err
 	}
 
-	if opt != nil {
-		c = New(opt.Comment, opt.Separator, opt.PreSpace, opt.PostSpace)
-	} else {
-		c = NewDefault()
-	}
-
+	c = New(opt)
 	if err = c.read(bufio.NewReader(file)); err != nil {
 		return nil, err
 	}
@@ -44,16 +32,10 @@ func Load(fname string, opt *Options) (c *Config, err error) {
 }
 
 func LoadFrom(r io.Reader, opt *Options) (c *Config, err error) {
-	if opt != nil {
-		c = New(opt.Comment, opt.Separator, opt.PreSpace, opt.PostSpace)
-	} else {
-		c = NewDefault()
-	}
-
+	c = New(opt)
 	if err = c.read(bufio.NewReader(r)); err != nil {
 		return nil, err
 	}
-
 	return c, nil
 }
 

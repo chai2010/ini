@@ -93,9 +93,8 @@ func (c *Config) Options(section string) (options []string, err error) {
 	return options, nil
 }
 
-// SectionOptions returns only the list of options available in the given section.
-// Unlike Options, SectionOptions doesn't return options in default section.
-func (c *Config) SectionOptions(section string) (options []string) {
+// GetOptionList returns only the list of options available in the given section.
+func (c *Config) GetOptionList(section string) (options []string) {
 	if section == "" {
 		section = DEFAULT_SECTION
 	}

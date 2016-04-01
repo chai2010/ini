@@ -48,12 +48,12 @@ func testGet(t *testing.T, c *Config, section string, option string,
 
 // TestInMemory creates configuration representation and run multiple tests in-memory.
 func TestInMemory(t *testing.T) {
-	c := NewDefault()
+	c := New(nil)
 
 	// == Test empty structure
 
 	// should be empty
-	if len(c.Sections()) != 1 {
+	if len(c.GetSectionList()) != 1 {
 		t.Errorf("Sections failure: invalid length")
 	}
 
@@ -226,7 +226,7 @@ func TestReadFile(t *testing.T) {
 	}
 
 	// check number of sections
-	if len(c.Sections()) != 3 {
+	if len(c.GetSectionList()) != 3 {
 		t.Errorf("Sections failure: wrong number of sections")
 	}
 
@@ -248,7 +248,7 @@ func TestReadFile(t *testing.T) {
 
 // TestWriteReadFile tests writing and reading back a configuration file.
 func TestWriteReadFile(t *testing.T) {
-	cw := NewDefault()
+	cw := New(nil)
 
 	// write file; will test only read later on
 	cw.AddSection("First-Section")
@@ -280,7 +280,7 @@ func TestWriteReadFile(t *testing.T) {
 
 // TestSectionOptions tests read options in a section without default options.
 func TestSectionOptions(t *testing.T) {
-	cw := NewDefault()
+	cw := New(nil)
 
 	// write file; will test only read later on
 	cw.AddSection("First-Section")
@@ -302,7 +302,7 @@ func TestSectionOptions(t *testing.T) {
 		t.Fatalf("ReadDefault failure: %s", err)
 	}
 
-	options := cr.SectionOptions("First-Section")
+	options := cr.GetOptionList("First-Section")
 
 	if len(options) != 2 {
 		t.Fatalf("SectionOptions reads wrong data: %v", options)
@@ -322,7 +322,7 @@ func TestSectionOptions(t *testing.T) {
 		t.Fatalf("SectionOptions reads wrong data: %v", options)
 	}
 
-	options = cr.SectionOptions(DEFAULT_SECTION)
+	options = cr.GetOptionList(DEFAULT_SECTION)
 
 	expected = map[string]bool{
 		"host":     true,

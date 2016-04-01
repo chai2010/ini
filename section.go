@@ -55,9 +55,9 @@ func (c *Config) HasSection(section string) bool {
 	return ok
 }
 
-// Sections returns the list of sections in the configuration.
+// GetSectionList returns the list of sections in the configuration.
 // (The default section always exists).
-func (c *Config) Sections() (sections []string) {
+func (c *Config) GetSectionList() (sections []string) {
 	for i := 0; i < c.lastIdSection; i++ {
 		for section, id := range c.idSectionMap {
 			if id == i {

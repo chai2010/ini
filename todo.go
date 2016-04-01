@@ -4,14 +4,6 @@
 
 package ini
 
-func (c *Config) GetSectionList() []string {
-	return c.Sections()
-}
-
-func (c *Config) GetKeyList(section string) []string {
-	return c.SectionOptions(section)
-}
-
 func (c *Config) MustBool(section, key string, defaultVal ...bool) bool {
 	v, err := c.Bool(section, key)
 	if err != nil {

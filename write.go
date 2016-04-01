@@ -71,8 +71,8 @@ func (c *Config) write(buf *bufio.Writer, header string) (err error) {
 		}
 	}
 
-	for _, section := range c.Sections() {
-		options := c.SectionOptions(section)
+	for _, section := range c.GetSectionList() {
+		options := c.GetOptionList(section)
 
 		// Skip default section if empty.
 		if section == DEFAULT_SECTION && len(options) == 0 {

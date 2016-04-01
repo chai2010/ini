@@ -21,6 +21,13 @@ const (
 	_DEPTH_VALUES = 64
 )
 
+type Options struct {
+	Comment   string // default is DEFAULT_COMMENT
+	Separator string // default is ALTERNATIVE_SEPARATOR
+	PreSpace  bool   // default is true
+	PostSpace bool   // default is true
+}
+
 var (
 	// Strings accepted as boolean.
 	boolString = map[string]bool{
@@ -70,25 +77,42 @@ type tValue struct {
 // This representation can be filled with AddSection and AddOption and then
 // saved to a file using WriteFile.
 //
-//	comment: has to be `DEFAULT_COMMENT` or `ALTERNATIVE_COMMENT`
-//	separator: has to be `DEFAULT_SEPARATOR` or `ALTERNATIVE_SEPARATOR`
-//	preSpace: indicate if is inserted a space before of the separator
-//	postSpace: indicate if is added a space after of the separator
+//	opt.Comment: has to be `DEFAULT_COMMENT` or `ALTERNATIVE_COMMENT`
+//	opt.Separator: has to be `DEFAULT_SEPARATOR` or `ALTERNATIVE_SEPARATOR`
+//	opt.PreSpace: indicate if is inserted a space before of the separator
+//	opt.PostSpace: indicate if is added a space after of the separator
 //
-func New(comment, separator string, preSpace, postSpace bool) *Config {
-	if comment != DEFAULT_COMMENT && comment != ALTERNATIVE_COMMENT {
-		panic("invalid comment:" + comment)
+func New(opt *Options) *Config {
+	if opt == nil {
+		opt = &Options{
+			Comment:   DEFAULT_COMMENT,
+			Separator: DEFAULT_SEPARATOR,
+			PreSpace:  true,
+			PostSpace: true,
+		}
+	}
+	if opt.Comment == "" {
+		opt.Comment = DEFAULT_COMMENT
+	}
+	if opt.Separator == "" {
+		opt.Separator = DEFAULT_SEPARATOR
 	}
 
-	if separator != DEFAULT_SEPARATOR && separator != ALTERNATIVE_SEPARATOR {
-		panic("invalid separator:" + separator)
+	if opt.Comment != DEFAULT_COMMENT && opt.Comment != ALTERNATIVE_COMMENT {
+		panic("invalid comment:" + opt.Comment)
 	}
+	if opt.Separator != DEFAULT_SEPARATOR && opt.Separator != ALTERNATIVE_SEPARATOR {
+		panic("invalid separator:" + opt.Separator)
+	}
+
+	comment := opt.Comment
+	separator := opt.Separator
 
 	// Get spaces around separator
-	if preSpace {
+	if opt.PreSpace {
 		separator = " " + separator
 	}
-	if postSpace {
+	if opt.PostSpace {
 		separator += " "
 	}
 
@@ -103,11 +127,6 @@ func New(comment, separator string, preSpace, postSpace bool) *Config {
 	c.AddSection(DEFAULT_SECTION) // Default section always exists.
 
 	return c
-}
-
-// NewDefault creates a configuration representation with values by default.
-func NewDefault() *Config {
-	return New(DEFAULT_COMMENT, DEFAULT_SEPARATOR, true, true)
 }
 
 // Merge merges the given configuration "source" with this one ("p").
