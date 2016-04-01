@@ -60,7 +60,7 @@ func (c *Config) read(buf *bufio.Reader) (err error) {
 		// Continuation of multi-line value
 		// starts with whitespace, we're in a section and working on an option
 		case section != "" && option != "" && (l[0] == ' ' || l[0] == '\t'):
-			prev, _ := c.RawString(section, option)
+			prev, _ := c.GetValue(section, option)
 			value := strings.TrimSpace(l)
 			c.AddOption(section, option, prev+"\n"+value)
 

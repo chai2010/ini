@@ -23,17 +23,17 @@ func testGet(t *testing.T, c *Config, section string, option string,
 	ok := false
 	switch expected.(type) {
 	case string:
-		v, _ := c.String(section, option)
+		v, _ := c.GetString(section, option)
 		if v == expected.(string) {
 			ok = true
 		}
 	case int:
-		v, _ := c.Int(section, option)
+		v, _ := c.GetInt(section, option)
 		if v == expected.(int) {
 			ok = true
 		}
 	case bool:
-		v, _ := c.Bool(section, option)
+		v, _ := c.GetBool(section, option)
 		if v == expected.(bool) {
 			ok = true
 		}
@@ -41,7 +41,7 @@ func testGet(t *testing.T, c *Config, section string, option string,
 		t.Fatalf("Bad test case")
 	}
 	if !ok {
-		v, _ := c.String(section, option)
+		v, _ := c.GetString(section, option)
 		t.Errorf("Get failure: expected different value for %s %s (expected: [%#v] got: [%#v])", section, option, expected, v)
 	}
 }
@@ -73,13 +73,13 @@ func TestInMemory(t *testing.T) {
 	}
 
 	// get value from missing section/option
-	_, err := c.String("no-section", "no-option")
+	_, err := c.GetString("no-section", "no-option")
 	if err == nil {
 		t.Errorf("String failure: got value for missing section/option")
 	}
 
 	// get value from missing section/option
-	_, err = c.Int("no-section", "no-option")
+	_, err = c.GetInt("no-section", "no-option")
 	if err == nil {
 		t.Errorf("Int failure: got value for missing section/option")
 	}
@@ -134,7 +134,7 @@ func TestInMemory(t *testing.T) {
 	}
 
 	// read it back again
-	_, err = c.String("section1", "option1")
+	_, err = c.GetString("section1", "option1")
 	if err == nil {
 		t.Errorf("String failure: got value for removed section/option")
 	}
@@ -179,7 +179,7 @@ func TestInMemory(t *testing.T) {
 	c.AddOption(DEFAULT_SECTION, "opt1", "%(opt2)s")
 	c.AddOption(DEFAULT_SECTION, "opt2", "%(opt1)s")
 
-	_, err = c.String(DEFAULT_SECTION, "opt1")
+	_, err = c.GetString(DEFAULT_SECTION, "opt1")
 	if err == nil {
 		t.Errorf("String failure: no error for cycle")
 	} else if strings.Index(err.Error(), "cycle") < 0 {
@@ -356,26 +356,26 @@ func TestMerge(t *testing.T) {
 	target.Merge(source)
 
 	// Assert whether a regular option was merged from source -> target
-	if result, _ := target.String(DEFAULT_SECTION, "one"); result != "source1" {
+	if result, _ := target.GetString(DEFAULT_SECTION, "one"); result != "source1" {
 		t.Errorf("Expected 'one' to be '1' but instead it was '%s'", result)
 	}
 	// Assert that a non-existent option in source was not overwritten
-	if result, _ := target.String(DEFAULT_SECTION, "five"); result != "5" {
+	if result, _ := target.GetString(DEFAULT_SECTION, "five"); result != "5" {
 		t.Errorf("Expected 'five' to be '5' but instead it was '%s'", result)
 	}
 	// Assert that a folded option was correctly unfolded
-	if result, _ := target.String(DEFAULT_SECTION, "two_+_three"); result != "source2 + source3" {
+	if result, _ := target.GetString(DEFAULT_SECTION, "two_+_three"); result != "source2 + source3" {
 		t.Errorf("Expected 'two_+_three' to be 'source2 + source3' but instead it was '%s'", result)
 	}
-	if result, _ := target.String(DEFAULT_SECTION, "four"); result != "4" {
+	if result, _ := target.GetString(DEFAULT_SECTION, "four"); result != "4" {
 		t.Errorf("Expected 'four' to be '4' but instead it was '%s'", result)
 	}
 
 	// Assert that a section option has been merged
-	if result, _ := target.String("X", "x.one"); result != "sourcex1" {
+	if result, _ := target.GetString("X", "x.one"); result != "sourcex1" {
 		t.Errorf("Expected '[X] x.one' to be 'sourcex1' but instead it was '%s'", result)
 	}
-	if result, _ := target.String("X", "x.four"); result != "x4" {
+	if result, _ := target.GetString("X", "x.four"); result != "x4" {
 		t.Errorf("Expected '[X] x.four' to be 'x4' but instead it was '%s'", result)
 	}
 }

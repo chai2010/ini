@@ -5,7 +5,7 @@
 package ini
 
 func (c *Config) MustValue(section, key string, defaultVal ...string) string {
-	v, err := c.String(section, key)
+	v, err := c.GetValue(section, key)
 	if err != nil {
 		if len(defaultVal) > 0 {
 			return defaultVal[0]
@@ -17,7 +17,7 @@ func (c *Config) MustValue(section, key string, defaultVal ...string) string {
 }
 
 func (c *Config) MustBool(section, key string, defaultVal ...bool) bool {
-	v, err := c.Bool(section, key)
+	v, err := c.GetBool(section, key)
 	if err != nil {
 		if len(defaultVal) > 0 {
 			return defaultVal[0]
@@ -29,7 +29,7 @@ func (c *Config) MustBool(section, key string, defaultVal ...bool) bool {
 }
 
 func (c *Config) MustInt(section, key string, defaultVal ...int) int {
-	v, err := c.Int(section, key)
+	v, err := c.GetInt(section, key)
 	if err != nil {
 		if len(defaultVal) > 0 {
 			return defaultVal[0]
@@ -41,7 +41,19 @@ func (c *Config) MustInt(section, key string, defaultVal ...int) int {
 }
 
 func (c *Config) MustFloat64(section, key string, defaultVal ...float64) float64 {
-	v, err := c.Float64(section, key)
+	v, err := c.GetFloat64(section, key)
+	if err != nil {
+		if len(defaultVal) > 0 {
+			return defaultVal[0]
+		} else {
+			panic(err)
+		}
+	}
+	return v
+}
+
+func (c *Config) MustString(section, key string, defaultVal ...string) string {
+	v, err := c.GetString(section, key)
 	if err != nil {
 		if len(defaultVal) > 0 {
 			return defaultVal[0]
