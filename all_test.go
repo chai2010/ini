@@ -68,7 +68,7 @@ func TestInMemory(t *testing.T) {
 	}
 
 	// test presence of option for missing section
-	if c.HasOption("no-section", "no-option") {
+	if c.HasSectionKey("no-section", "no-option") {
 		t.Errorf("HasSection failure: invalid/section/option")
 	}
 
@@ -90,7 +90,7 @@ func TestInMemory(t *testing.T) {
 	}
 
 	// remove missing section/option
-	if c.RemoveOption("no-section", "no-option") {
+	if c.RemoveSectionKey("no-section", "no-option") {
 		t.Errorf("RemoveOption failure: removed missing section/option")
 	}
 
@@ -112,24 +112,24 @@ func TestInMemory(t *testing.T) {
 	}
 
 	// add option/value
-	if !c.AddOption("section1", "option1", "value1") {
+	if !c.AddSectionKey("section1", "option1", "value1") {
 		t.Errorf("AddOption failure: false on first insert")
 	}
 	testGet(t, c, "section1", "option1", "value1") // read it back
 
 	// overwrite value
-	if c.AddOption("section1", "option1", "value2") {
+	if c.AddSectionKey("section1", "option1", "value2") {
 		t.Errorf("AddOption failure: true on second insert")
 	}
 	testGet(t, c, "section1", "option1", "value2") // read it back again
 
 	// remove option/value
-	if !c.RemoveOption("section1", "option1") {
+	if !c.RemoveSectionKey("section1", "option1") {
 		t.Errorf("RemoveOption failure: false on first remove")
 	}
 
 	// remove again
-	if c.RemoveOption("section1", "option1") {
+	if c.RemoveSectionKey("section1", "option1") {
 		t.Errorf("RemoveOption failure: true on second remove")
 	}
 
@@ -157,27 +157,27 @@ func TestInMemory(t *testing.T) {
 	}
 
 	// add number
-	if !c.AddOption("section2", "test-number", "666") {
+	if !c.AddSectionKey("section2", "test-number", "666") {
 		t.Errorf("AddOption failure: false on first insert")
 	}
 	testGet(t, c, "section2", "test-number", 666) // read it back
 
 	// add 'yes' (bool)
-	if !c.AddOption("section2", "test-yes", "yes") {
+	if !c.AddSectionKey("section2", "test-yes", "yes") {
 		t.Errorf("AddOption failure: false on first insert")
 	}
 	testGet(t, c, "section2", "test-yes", true) // read it back
 
 	// add 'false' (bool)
-	if !c.AddOption("section2", "test-false", "false") {
+	if !c.AddSectionKey("section2", "test-false", "false") {
 		t.Errorf("AddOption failure: false on first insert")
 	}
 	testGet(t, c, "section2", "test-false", false) // read it back
 
 	// == Test cycle
 
-	c.AddOption(DEFAULT_SECTION, "opt1", "%(opt2)s")
-	c.AddOption(DEFAULT_SECTION, "opt2", "%(opt1)s")
+	c.AddSectionKey(DEFAULT_SECTION, "opt1", "%(opt2)s")
+	c.AddSectionKey(DEFAULT_SECTION, "opt2", "%(opt1)s")
 
 	_, err = c.GetString(DEFAULT_SECTION, "opt1")
 	if err == nil {
@@ -230,7 +230,7 @@ func TestReadFile(t *testing.T) {
 	}
 
 	// check number of options 6 of [section-1] plus 2 of [default]
-	opts := c.GetOptionList("section-1")
+	opts := c.GetSectionKeyList("section-1")
 	if len(opts) != 6 {
 		t.Errorf("Options failure: wrong number of options: %d", len(opts))
 	}
@@ -251,15 +251,15 @@ func TestWriteReadFile(t *testing.T) {
 
 	// write file; will test only read later on
 	cw.AddSection("First-Section")
-	cw.AddOption("First-Section", "option1", "value option1")
-	cw.AddOption("First-Section", "option2", "2")
+	cw.AddSectionKey("First-Section", "option1", "value option1")
+	cw.AddSectionKey("First-Section", "option2", "2")
 
-	cw.AddOption("", "host", "www.example.com")
-	cw.AddOption(DEFAULT_SECTION, "protocol", "https://")
-	cw.AddOption(DEFAULT_SECTION, "base-url", "%(protocol)s%(host)s")
+	cw.AddSectionKey("", "host", "www.example.com")
+	cw.AddSectionKey(DEFAULT_SECTION, "protocol", "https://")
+	cw.AddSectionKey(DEFAULT_SECTION, "base-url", "%(protocol)s%(host)s")
 
-	cw.AddOption("Another-Section", "useHTTPS", "y")
-	cw.AddOption("Another-Section", "url", "%(base-url)s/some/path")
+	cw.AddSectionKey("Another-Section", "useHTTPS", "y")
+	cw.AddSectionKey("Another-Section", "url", "%(base-url)s/some/path")
 
 	cw.WriteFile(tmpFilename, 0644, "Test file for test-case")
 
@@ -283,15 +283,15 @@ func TestSectionOptions(t *testing.T) {
 
 	// write file; will test only read later on
 	cw.AddSection("First-Section")
-	cw.AddOption("First-Section", "option1", "value option1")
-	cw.AddOption("First-Section", "option2", "2")
+	cw.AddSectionKey("First-Section", "option1", "value option1")
+	cw.AddSectionKey("First-Section", "option2", "2")
 
-	cw.AddOption("", "host", "www.example.com")
-	cw.AddOption(DEFAULT_SECTION, "protocol", "https://")
-	cw.AddOption(DEFAULT_SECTION, "base-url", "%(protocol)s%(host)s")
+	cw.AddSectionKey("", "host", "www.example.com")
+	cw.AddSectionKey(DEFAULT_SECTION, "protocol", "https://")
+	cw.AddSectionKey(DEFAULT_SECTION, "base-url", "%(protocol)s%(host)s")
 
-	cw.AddOption("Another-Section", "useHTTPS", "y")
-	cw.AddOption("Another-Section", "url", "%(base-url)s/some/path")
+	cw.AddSectionKey("Another-Section", "useHTTPS", "y")
+	cw.AddSectionKey("Another-Section", "url", "%(base-url)s/some/path")
 
 	cw.WriteFile(tmpFilename, 0644, "Test file for test-case")
 
@@ -301,7 +301,7 @@ func TestSectionOptions(t *testing.T) {
 		t.Fatalf("ReadDefault failure: %s", err)
 	}
 
-	options := cr.GetOptionList("First-Section")
+	options := cr.GetSectionKeyList("First-Section")
 
 	if len(options) != 2 {
 		t.Fatalf("SectionOptions reads wrong data: %v", options)
@@ -321,7 +321,7 @@ func TestSectionOptions(t *testing.T) {
 		t.Fatalf("SectionOptions reads wrong data: %v", options)
 	}
 
-	options = cr.GetOptionList(DEFAULT_SECTION)
+	options = cr.GetSectionKeyList(DEFAULT_SECTION)
 
 	expected = map[string]bool{
 		"host":     true,

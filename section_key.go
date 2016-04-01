@@ -4,9 +4,9 @@
 
 package ini
 
-// HasOption checks if the configuration has the given option in the section.
+// HasSectionKey checks if the configuration has the given option in the section.
 // It returns false if either the option or section do not exist.
-func (c *Config) HasOption(section string, option string) bool {
+func (c *Config) HasSectionKey(section string, option string) bool {
 	if section == "" {
 		section = DEFAULT_SECTION
 	}
@@ -19,14 +19,14 @@ func (c *Config) HasOption(section string, option string) bool {
 	return ok
 }
 
-// AddOption adds a new option and value to the configuration.
+// AddSectionKey adds a new option and value to the configuration.
 //
 // If the section is nil then uses the section by default; if it does not exist,
 // it is created in advance.
 //
 // It returns true if the option and value were inserted, and false if the value
 // was overwritten.
-func (c *Config) AddOption(section string, option string, value string) bool {
+func (c *Config) AddSectionKey(section string, option string, value string) bool {
 	if section == "" {
 		section = DEFAULT_SECTION
 	}
@@ -39,10 +39,10 @@ func (c *Config) AddOption(section string, option string, value string) bool {
 	return !ok
 }
 
-// RemoveOption removes a option and value from the configuration.
+// RemoveSectionKey removes a option and value from the configuration.
 // It returns true if the option and value were removed, and false otherwise,
 // including if the section did not exist.
-func (c *Config) RemoveOption(section string, option string) bool {
+func (c *Config) RemoveSectionKey(section string, option string) bool {
 	if section == "" {
 		section = DEFAULT_SECTION
 	}
@@ -56,8 +56,8 @@ func (c *Config) RemoveOption(section string, option string) bool {
 	return ok
 }
 
-// GetOptionList returns only the list of options available in the given section.
-func (c *Config) GetOptionList(section string) (options []string) {
+// GetSectionKeyList returns only the list of options available in the given section.
+func (c *Config) GetSectionKeyList(section string) (options []string) {
 	if section == "" {
 		section = DEFAULT_SECTION
 	}

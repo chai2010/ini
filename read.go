@@ -62,7 +62,7 @@ func (c *Config) read(buf *bufio.Reader) (err error) {
 		case section != "" && option != "" && (l[0] == ' ' || l[0] == '\t'):
 			prev, _ := c.GetValue(section, option)
 			value := strings.TrimSpace(l)
-			c.AddOption(section, option, prev+"\n"+value)
+			c.AddSectionKey(section, option, prev+"\n"+value)
 
 		// Other alternatives
 		default:
@@ -73,7 +73,7 @@ func (c *Config) read(buf *bufio.Reader) (err error) {
 			case i > 0 && l[0] != ' ' && l[0] != '\t': // found an =: and it's not a multiline continuation
 				option = strings.TrimSpace(l[0:i])
 				value := strings.TrimSpace(l[i+1:])
-				c.AddOption(section, option, value)
+				c.AddSectionKey(section, option, value)
 
 			default:
 				return fmt.Errorf("ini: could not parse line: %d", l)

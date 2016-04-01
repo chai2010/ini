@@ -142,7 +142,7 @@ func (p *Config) Merge(source *Config) {
 
 	for section, option := range source.dataMap {
 		for optionName, optionValue := range option {
-			p.AddOption(section, optionName, optionValue.v)
+			p.AddSectionKey(section, optionName, optionValue.v)
 		}
 	}
 }
