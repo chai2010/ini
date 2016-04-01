@@ -353,7 +353,7 @@ func TestMerge(t *testing.T) {
 		t.Fatalf("Unable to read source config file '%s'", sourceFilename)
 	}
 
-	target.Merge(source)
+	target.MergeFrom(source)
 
 	// Assert whether a regular option was merged from source -> target
 	if result, _ := target.GetString(DEFAULT_SECTION, "one"); result != "source1" {

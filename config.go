@@ -129,13 +129,13 @@ func New(opt *Options) *Config {
 	return c
 }
 
-// Merge merges the given configuration "source" with this one ("p").
+// MergeFrom merges the given configuration "source" with this one ("p").
 //
 // Merging means that any option (under any section) from source that is not in
 // p will be copied into p. When the p already has an option with
 // the same name and section then it is overwritten (i.o.w. the source wins).
 //
-func (p *Config) Merge(source *Config) {
+func (p *Config) MergeFrom(source *Config) {
 	if source == nil || len(source.dataMap) == 0 {
 		return
 	}
