@@ -19,8 +19,13 @@ func Load(fname string, opt *Options) (c *Config, err error) {
 		return nil, err
 	}
 
+	br := bufio.NewReader(file)
+	if bom, _ := br.Peek(3); string(bom) == "\xEF\xBB\xBF" {
+		br.Discard(3)
+	}
+
 	c = New(opt)
-	if err = c.read(bufio.NewReader(file)); err != nil {
+	if err = c.read(br); err != nil {
 		return nil, err
 	}
 
@@ -32,8 +37,19 @@ func Load(fname string, opt *Options) (c *Config, err error) {
 }
 
 func LoadFrom(r io.Reader, opt *Options) (c *Config, err error) {
+	var br *bufio.Reader
+	if p, ok := r.(*bufio.Reader); ok {
+		br = p
+	} else {
+		br = bufio.NewReader(r)
+	}
+
+	if bom, _ := br.Peek(3); string(bom) == "\xEF\xBB\xBF" {
+		br.Discard(3)
+	}
+
 	c = New(opt)
-	if err = c.read(bufio.NewReader(r)); err != nil {
+	if err = c.read(br); err != nil {
 		return nil, err
 	}
 	return c, nil
