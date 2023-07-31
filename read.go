@@ -92,7 +92,7 @@ func (c *Config) read(buf *bufio.Reader) (err error) {
 				c.AddSectionKey(section, option, value)
 
 			default:
-				return fmt.Errorf("ini: could not parse line: %d", l)
+				return fmt.Errorf("ini: could not parse line: %v", l)
 			}
 		}
 	}
